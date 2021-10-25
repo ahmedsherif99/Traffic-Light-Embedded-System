@@ -1,0 +1,79 @@
+*Traffic Light Project
+
+*Components:
+In the project we used:
+3 GPIO Ports (D,E,F)
+2 Timer (Timer0,Timer1)
+UART 	(UART0)
+
+*Variables:
+x => used as counter for cars traffic lights
+flag => used for handling delay of pedestrian ISR
+t => used in for loop to make pedestrian light for 2 sec
+(statflagN,statflagE,statflagPN,statflagPE)=>check UART print state
+
+*functions:
+printchar=>send characters to UART0 to print on terminal
+print=> take string of charachters and print it using printchar
+GPIOPortF_Handler=> Interrupt service routine for buttons
+Timer0A_Handler=> Interrupt service routine for cars traffic lights
+Timer1A_Handler=> Interrupt service routine for delaying the call 
+of pedestrian after called before
+GPIOF_init=> intialization of portf and buttons
+GPIOD_init=> intialization of portD and leds
+GPIOE_init=> intialization of portE and leds
+Timer0in=> intialization of Timer0
+Timer1in=> intialization of Timer1
+UARTin => intialization of UART0
+
+*Description:
+
+*in the main.c file we called the initialization functions
+and an empty while loop for the code
+
+*in the projectfunction.c file we wrote the Initialization
+functions for each PORT and Timer and the UART
+
+*we also used the GPIO_PORTF_handler as the ISR for the buttons
+of the pedestrian
+
+*Timer0_handler was used as the ISR for the cars light traffic
+of the NORTH SOUTH and the EAST WEST with a priority lower
+than GPIO_PORTF to be able to PORTF to make a preemption
+and serve PORTF's ISR
+
+*Timer1 was used for the timing of the pedestrian lights
+
+*Timer1_handler was the ISR used for handling the delay of
+calling the pedestrian lights again after finishing it by
+a delay of 1 second
+
+*UART0 was used for printing the state of the Traffic lights
+on the terminal of our computer
+
+*Implementation
+
+*first the green light of North south light for 5 sec
+then yellow for 2 sec then red
+after red light 1 sec green of EAST WEST light
+for 5 sec then yellow for 2 then red then wait
+1 sec then cycle repeats
+*If pedestrian pushed the button the pedestrian
+light turns green for 2 sec then turns red
+*cars green light will be paused from its time position
+then return to complete its remaining time after red of 
+pedestrian light
+
+*Handling:
+
+1-If two pedestrian push at same time only the one with 
+cars light green will interrupt hte cars light and open
+its green pedestrian light
+2-if a pedestrian push more than once during the period
+of green pedestrian light it will not iterrupt again
+but will light the green for only 2 seconds
+3- delay was put to stop pedestrian from using button
+again just after the pedestrian red lights instead
+he will have to wait for 1 sec to use the button again
+
+
